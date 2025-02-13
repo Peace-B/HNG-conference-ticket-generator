@@ -4,11 +4,11 @@ import Logo from "../assets/Frame 1618871078.png"
 
 const NavBar = () => {
   return (
-    <div className='w-4/5 m-auto bg-[#02191D] text-white flex justify-between items-center border-2 border-[#0E464F] rounded-2xl p-3 font-[Jejumyeongjo]'>
+    <div className='w-[350px]  xl:w-4/5 m-auto bg-[#02191D] text-white flex justify-between items-center border-2 border-[#0E464F] rounded-2xl p-3 font-[Jejumyeongjo]'>
       <div className="logo">
         <img src={Logo} alt="" />
       </div>
-      <ul className='flex gap-6'>
+      <ul className='hidden sm:flex gap-6'>
         <li>Events</li>
         <li>My Tokens</li>
         <li>About Projects</li>

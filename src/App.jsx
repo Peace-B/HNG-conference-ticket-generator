@@ -1,8 +1,9 @@
 import './App.css'
 import 'remixicon/fonts/remixicon.css';
-import Home from './pages/Home';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-// import TicketSelection from './components/TicketSelection';
+import Home from './pages/Home';
+import AttendeeDetails from './components/AttendeeDetails';
+import Ready from './components/Ready';
 
 function App() {
 
@@ -11,8 +12,8 @@ function App() {
       <Router>
         <Routes>
           <Route exact path="/" element={<Home />} />
-          {/* <Route path="/ticketselection" element={<TicketSelection />} /> */}
-          {/* <Route path="/contact" element={<Contact />} />  */}
+          <Route path="/attendeedetails" element={<AttendeeDetails />} />
+          <Route path="/ready" element={<Ready/>} /> 
         </Routes>
       </Router>
     </>
