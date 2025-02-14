@@ -6,21 +6,20 @@ import ProgressBar from "../components/ProgressBar";
 const AttendeeDetails = () => {
   const navigate = useNavigate();
 
-  const getSavedFormData = () => {
-    const savedData = localStorage.getItem("attendeeFormData");
-    const savedTicket = localStorage.getItem("selectedTicket"); // Get the selected ticket type
-    
-    return savedData
-      ? { ...JSON.parse(savedData), ticketType: savedTicket || "" } 
-      : { name: "", email: "", about: "", avatar: "", ticketType: savedTicket || "" };
-  };
-  
-  const [formData, setFormData] = useState(getSavedFormData);
-  const [errors, setErrors] = useState({});
-
+  // Reset local storage when the component is mounted
   useEffect(() => {
-    localStorage.setItem("attendeeFormData", JSON.stringify(formData));
-  }, [formData]);
+    localStorage.removeItem("attendeeFormData");
+  }, []);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    about: "",
+    avatar: "",
+    ticketType: localStorage.getItem("selectedTicket") || "",
+  });
+
+  const [errors, setErrors] = useState({});
 
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
@@ -85,13 +84,12 @@ const AttendeeDetails = () => {
             <div className="w-[280px] xl:w-[530px] h-[290px] m-auto mt-8 text-center bg-gradient-to-l from-[#08252B] to-[#07373F] xl:border border-[#0E464F] rounded-3xl">
               <p className="text-start pl-8 pt-3">Upload a File</p>
               <div className="relative w-[260px] xl:w-[470px] h-[180px] bg-[#041E23] m-auto mt-4 flex items-center justify-center">
-          <input 
-            type="file" 
-            className="absolute bg-[#24A0B5] h-[220px] xl:py-2 px-0 rounded-3xl text-white cursor-pointer"
-            onChange={handleFileUpload} 
-           />
-           </div>
-
+                <input 
+                  type="file" 
+                  className="absolute bg-[#24A0B5] h-[220px] xl:py-2 px-0 rounded-3xl text-white cursor-pointer"
+                  onChange={handleFileUpload} 
+                />
+              </div>
               {errors.avatar && <p className="text-red-500 text-sm">{errors.avatar}</p>}
             </div>
             <div className="w-[300px] flex flex-col xl:w-[530px] m-auto my-8">

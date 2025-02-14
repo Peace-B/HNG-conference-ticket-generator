@@ -10,6 +10,14 @@ const Events = () => {
   const totalTickets = 20;
 
   useEffect(() => {
+    localStorage.removeItem('selectedTicket');
+    localStorage.removeItem('ticketCount');
+    setSelectedTicket(null);
+    setTicketCount('');
+  }, []);
+
+
+  useEffect(() => {
     if (selectedTicket) {
       localStorage.setItem('selectedTicket', selectedTicket);
     }
