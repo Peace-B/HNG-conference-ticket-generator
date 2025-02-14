@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import NavBar from '../components/NavBar';
 import { Link } from "react-router-dom";
 
-const Events = () => {
+const Tickets = () => {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [ticketCount, setTicketCount] = useState(null);
 
@@ -48,4 +48,4 @@ const Events = () => {
   );
 };
 
-export default Events;
+export default Tickets;

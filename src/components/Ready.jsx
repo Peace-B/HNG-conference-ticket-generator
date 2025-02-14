@@ -24,17 +24,34 @@ const Ready = () => {
   
 
   const downloadTicket = async () => {
-    if (!ticketRef.current) return;
-    const canvas = await html2canvas(ticketRef.current, { backgroundColor: null });
-    const image = canvas.toDataURL("image/png");
-
-    const link = document.createElement("a");
-    link.href = image;
-    link.download = "ticket.png";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    if (!ticketRef.current) {
+      console.error("Ticket reference is null.");
+      return;
+    }
+  
+    console.log("Capturing ticket...");
+    
+    try {
+      const canvas = await html2canvas(ticketRef.current, {
+        backgroundColor: null, 
+        useCORS: true // Allows images from external sources
+      });
+  
+      const image = canvas.toDataURL("image/png");
+  
+      const link = document.createElement("a");
+      link.href = image;
+      link.download = "ticket.png";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+  
+      console.log("Download triggered successfully!");
+    } catch (error) {
+      console.error("Error capturing ticket:", error);
+    }
   };
+  
 
   return (
     <div className="w-full h-[1400px] bg-[#052F35] flex justify-center items-center py-10">

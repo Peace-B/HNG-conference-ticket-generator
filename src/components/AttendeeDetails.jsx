@@ -6,21 +6,25 @@ import ProgressBar from "../components/ProgressBar";
 const AttendeeDetails = () => {
   const navigate = useNavigate();
 
-  // Reset local storage when the component is mounted
-  useEffect(() => {
-    localStorage.removeItem("attendeeFormData");
-  }, []);
-
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    about: "",
-    avatar: "",
-    ticketType: localStorage.getItem("selectedTicket") || "",
-  });
-
+  const getSavedFormData = () => {
+    const savedData = localStorage.getItem("attendeeFormData");
+    const savedTicket = localStorage.getItem("selectedTicket"); // Get the selected ticket type
+    
+    return savedData
+      ? { ...JSON.parse(savedData), ticketType: savedTicket || "" } 
+      : { name: "", email: "", about: "", avatar: "", ticketType: savedTicket || "" };
+  };
+  
+  const [formData, setFormData] = useState(getSavedFormData);
   const [errors, setErrors] = useState({});
 
+  useEffect(() => {
+    // Clear the stored form data when the component mounts
+    localStorage.removeItem("attendeeFormData");
+    setFormData({ name: "", email: "", about: "", avatar: "", ticketType: "" });
+  }, []);
+  
+  
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -50,20 +54,24 @@ const AttendeeDetails = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     let newErrors = {};
-
+  
     if (!formData.name.trim()) newErrors.name = "Name is required";
     if (!formData.email.trim()) newErrors.email = "Email is required";
     else if (!validateEmail(formData.email)) newErrors.email = "Invalid email format";
     if (formData.about.length < 10) newErrors.about = "Must be at least 10 characters";
     if (!formData.avatar) newErrors.avatar = "Avatar upload is required";
-
+  
+    console.log("Validation Errors:", newErrors); // Debugging
+  
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      return;
+      return; // Stops navigation if there are errors
     }
-
+  
+    console.log("Form submitted successfully!");
     navigate("/ready", { state: { formData } });
   };
+  
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -71,25 +79,37 @@ const AttendeeDetails = () => {
   };
 
   return (
-    <div className="bg-[radial-gradient(52.52%_32.71%_at_50%_97.66%,rgba(36,160,181,0.2)_0%,#02191D_100%)] h-auto pt-1">
+    <div className="bg-gradient-to-b from-[#041E23] to-[#07373F] h-auto pt-1 overflow-hidden">
       <NavBar />
       <div className="w-[350px] px-0 bg-[#041E23] xl:w-[700px] m-auto mt-10 border border-[#0E464F] rounded-3xl xl:px-12 pt-8 pb-8">
         <div className="bar mt-4">
-          <div className="flex justify-between text-white w-[580px] m-auto items-center">
-            <h1 className="text-3xl">Attendee Details</h1>
+          <div className="w-[280px] flex justify-between text-white xl:w-[580px] m-auto items-center">
+            <h1 className="text-xl xl:text-3xl">Attendee Details</h1>
             <p>Step 2/3</p>
           </div>
           <ProgressBar progress={50} />
-          <form className="w-[300px] xl:w-[600px] bg-[#08252B] xl:border border-[#0E464F] m-auto mt-4 rounded-3xl flex flex-col text-white pb-6" onSubmit={handleSubmit}>
+          <form className="w-[320px] xl:w-[600px] bg-[#08252B] xl:border border-[#0E464F] m-auto mt-4 rounded-3xl flex flex-col text-white pb-6" onSubmit={handleSubmit}>
             <div className="w-[280px] xl:w-[530px] h-[290px] m-auto mt-8 text-center bg-gradient-to-l from-[#08252B] to-[#07373F] xl:border border-[#0E464F] rounded-3xl">
               <p className="text-start pl-8 pt-3">Upload a File</p>
-              <div className="relative w-[260px] xl:w-[470px] h-[180px] bg-[#041E23] m-auto mt-4 flex items-center justify-center">
-                <input 
-                  type="file" 
-                  className="absolute bg-[#24A0B5] h-[220px] xl:py-2 px-0 rounded-3xl text-white cursor-pointer"
-                  onChange={handleFileUpload} 
-                />
-              </div>
+              <div className="relative w-[260px] xl:w-[470px] h-[180px] bg-[#041E23] m-auto mt-4 flex items-center justify-center rounded-3xl overflow-hidden">
+  {formData.avatar ? (
+    <img
+      src={formData.avatar}
+      alt="Uploaded Preview"
+      className="w-full h-full object-cover rounded-3xl"
+    />
+  ) : (
+    <p className="text-white">Upload a File</p>
+  )}
+
+  <input 
+    type="file"
+    className="absolute opacity-0 w-full h-full cursor-pointer"
+    onChange={handleFileUpload} 
+  />
+</div>
+
+
               {errors.avatar && <p className="text-red-500 text-sm">{errors.avatar}</p>}
             </div>
             <div className="w-[300px] flex flex-col xl:w-[530px] m-auto my-8">
@@ -109,7 +129,12 @@ const AttendeeDetails = () => {
             </div>
             <div className="w-[300px] flex-col gap-4 xl:w-[530px] m-auto mt-8 flex xl:flex-row xl:gap-0 justify-between">
               <button type="button" className="py-4 text-[#0E464F] border border-[#0E464F] xl:px-28 xl:py-2 rounded-xl">Back</button>
-              <button type="submit" className="py-4 bg-[#24A0B5] text-white px-2 xl:px-14 xl:py-2 rounded-xl disabled:opacity-50">Get My Free Ticket</button>
+              <button
+  type="submit"
+  className="py-4 bg-[#24A0B5] text-white px-2 xl:px-14 xl:py-2 rounded-xl"
+>
+  Get My Free Ticket
+</button>
             </div>
           </form>
         </div>
