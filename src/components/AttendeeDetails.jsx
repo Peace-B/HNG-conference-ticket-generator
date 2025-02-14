@@ -8,9 +8,13 @@ const AttendeeDetails = () => {
 
   const getSavedFormData = () => {
     const savedData = localStorage.getItem("attendeeFormData");
-    return savedData ? JSON.parse(savedData) : { name: "", email: "", about: "", avatar: "" };
+    const savedTicket = localStorage.getItem("selectedTicket"); // Get the selected ticket type
+    
+    return savedData
+      ? { ...JSON.parse(savedData), ticketType: savedTicket || "" } 
+      : { name: "", email: "", about: "", avatar: "", ticketType: savedTicket || "" };
   };
-
+  
   const [formData, setFormData] = useState(getSavedFormData);
   const [errors, setErrors] = useState({});
 
@@ -78,21 +82,26 @@ const AttendeeDetails = () => {
           </div>
           <ProgressBar progress={50} />
           <form className="w-[300px] xl:w-[600px] bg-[#08252B] xl:border border-[#0E464F] m-auto mt-4 rounded-3xl flex flex-col text-white pb-6" onSubmit={handleSubmit}>
-            <div className="w-[280px] xl:w-[530px] m-auto mt-8 text-center bg-gradient-to-l from-[#08252B] to-[#07373F] rounded-3xl">
+            <div className="w-[280px] xl:w-[530px] h-[290px] m-auto mt-8 text-center bg-gradient-to-l from-[#08252B] to-[#07373F] xl:border border-[#0E464F] rounded-3xl">
               <p className="text-start pl-8 pt-3">Upload a File</p>
-              <div className="w-[260px] xl:w-[470px] h-[200px] bg-[#041E23] m-auto mt-4 flex items-center justify-center">
-                <input type="file" className="bg-[#24A0B5] py-6 xl:py-2 px-0 xl:px-4 rounded-3xl text-white cursor-pointer" onChange={handleFileUpload} />
-              </div>
+              <div className="relative w-[260px] xl:w-[470px] h-[180px] bg-[#041E23] m-auto mt-4 flex items-center justify-center">
+          <input 
+            type="file" 
+            className="absolute bg-[#24A0B5] h-[220px] xl:py-2 px-0 rounded-3xl text-white cursor-pointer"
+            onChange={handleFileUpload} 
+           />
+           </div>
+
               {errors.avatar && <p className="text-red-500 text-sm">{errors.avatar}</p>}
             </div>
-            <div className="w-[300px] flex flex-col xl:w-[530px] m-auto">
+            <div className="w-[300px] flex flex-col xl:w-[530px] m-auto my-8">
               <label>Enter your name</label>
-              <input type="text" name="name" className="py-3 border border-[#0E464F] xl:py-2 rounded-xl px-4" value={formData.name} onChange={handleChange} />
+              <input type="text" name="name" className="py-3 border border-[#0E464F] xl:py-2.5 rounded-xl px-4" value={formData.name} onChange={handleChange} />
               {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
             </div>
-            <div className="w-[300px] flex flex-col xl:w-[530px] m-auto">
+            <div className="w-[300px] flex flex-col xl:w-[530px] m-auto mb-8">
               <label>Enter your email *</label>
-              <input type="text" name="email" className="py-3 border border-[#0E464F] xl:py-2 rounded-xl px-4" value={formData.email} onChange={handleChange} />
+              <input type="text" name="email" className="py-3 border border-[#0E464F] xl:py-2.5 rounded-xl px-4" value={formData.email} onChange={handleChange} />
               {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
             </div>
             <div className="w-[300px] flex flex-col xl:w-[530px] m-auto">

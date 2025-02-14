@@ -4,22 +4,22 @@ import { Link } from 'react-router-dom'
 import ProgressBar from '../components/ProgressBar'
 
 const Events = () => {
-  const [purchase, setPurchase] = useState(false)
-  const [selectedTicket, setSelectedTicket] = useState(null);
-  const [ticketCount, setTicketCount] = useState('');
+  const [purchase, setPurchase] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState(localStorage.getItem('selectedTicket') || null );
+  const [ticketCount, setTicketCount] = useState(localStorage.getItem('ticketCount') || '');
   const totalTickets = 20;
 
   useEffect(() => {
-    localStorage.removeItem('selectedTicket');
-    localStorage.removeItem('ticketCount');
-  }, []);
+    if (selectedTicket) {
+      localStorage.setItem('selectedTicket', selectedTicket);
+    }
+  }, [selectedTicket]);
 
   useEffect(() => {
-    if (selectedTicket && ticketCount) {
-      localStorage.setItem('selectedTicket', selectedTicket);
+    if (ticketCount) {
       localStorage.setItem('ticketCount', ticketCount);
     }
-  }, [selectedTicket, ticketCount]);
+  }, [ticketCount]);
 
   const handleNext = () => {
     localStorage.removeItem('selectedTicket');
@@ -31,6 +31,7 @@ const Events = () => {
     { type: 'VIP ACCESS', price: '$50' },
     { type: 'VVIP ACCESS', price: '$150' }
   ];
+
   
 
   return (
@@ -94,7 +95,7 @@ const Events = () => {
               localStorage.removeItem('ticketCount');
             }}
               >Cancel</button>
-            <Link to="/attendeedetails" onClick={handleNext}>
+            <Link to="/attendeedetails">
               <button 
                 className="px-33 bg-[#24A0B5] text-white xl:px-22 py-2 rounded-xl disabled:opacity-50" 
                 disabled={!selectedTicket || !ticketCount}
